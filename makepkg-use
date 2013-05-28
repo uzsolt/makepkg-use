@@ -2770,8 +2770,6 @@ trap 'trap_exit USR1 "$(gettext "An unknown error has occurred. Exiting...")"' E
 # default config is makepkg.conf
 MAKEPKG_CONF=${MAKEPKG_CONF:-$confdir/makepkg.conf}
 
-source_safe /etc/make-useflags.conf
-
 # $1 - name of useflag
 # $2 - return (output) value if yes
 # $3 - return (output) value if no
@@ -2899,6 +2897,7 @@ else
 		exit 1 # TODO: error code
 	fi
 fi
+
 
 unset pkgname pkgbase pkgver pkgrel epoch pkgdesc url license groups provides
 unset md5sums replaces depends conflicts backup source install changelog build
@@ -3046,6 +3045,10 @@ if (( INFAKEROOT )); then
 fi
 
 fullver=$(get_full_version)
+
+source_safe /etc/make-useflags.conf
+[ -f /etc/make-useflags.d/${pkgbase} ] && source_safe /etc/make-useflags.d/${pkgbase}
+
 msg "$(gettext "Making package: %s")" "$pkgbase $fullver ($(date))"
 
 if (( !PKGFUNC && !SPLITPKG )); then
