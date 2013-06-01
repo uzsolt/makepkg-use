@@ -1869,6 +1869,16 @@ create_package() {
 	cd_safe "$pkgdir"
 	msg "$(gettext "Creating package \"%s\"...")" "$pkgname"
 
+    # remove unwanted languages
+    msg2 "Langs: ${use_langs}"
+    if [ -n "${use_langs}" ]; then
+        msg2 "Deleting unwanted langs..."
+        find usr/share/locale -maxdepth 1 -mindepth 1 -type d \
+        $(echo ${use_langs} | sed "s@^\|,@ ! -name @g") -exec rm -rf {} \;
+    else
+        msg2 "Keep all languages..."
+    fi
+
 	pkgarch=$(get_pkg_arch)
 
 	write_pkginfo > .PKGINFO
@@ -2673,6 +2683,9 @@ There is NO WARRANTY, to the extent permitted by law.\n")"
 
 # PROGRAM START
 
+source_safe /etc/make-useflags.conf
+[ -f /etc/make-useflags.d/${pkgbase} ] && source_safe /etc/make-useflags.d/${pkgbase}
+
 # determine whether we have gettext; make it a no-op if we do not
 if ! type -p gettext >/dev/null; then
 	gettext() {
@@ -3045,9 +3058,6 @@ if (( INFAKEROOT )); then
 fi
 
 fullver=$(get_full_version)
-
-source_safe /etc/make-useflags.conf
-[ -f /etc/make-useflags.d/${pkgbase} ] && source_safe /etc/make-useflags.d/${pkgbase}
 
 msg "$(gettext "Making package: %s")" "$pkgbase $fullver ($(date))"
 
