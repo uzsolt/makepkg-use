@@ -2683,7 +2683,6 @@ There is NO WARRANTY, to the extent permitted by law.\n")"
 # PROGRAM START
 
 source_safe /etc/make-useflags.conf
-[ -f /etc/make-useflags.d/${pkgbase} ] && source_safe /etc/make-useflags.d/${pkgbase}
 
 # determine whether we have gettext; make it a no-op if we do not
 if ! type -p gettext >/dev/null; then
@@ -2940,6 +2939,8 @@ fi
 # set defaults if they weren't specified in buildfile
 pkgbase=${pkgbase:-${pkgname[0]}}
 epoch=${epoch:-0}
+
+[ -f /etc/make-useflags.d/${pkgbase} ] &&  source_safe /etc/make-useflags.d/${pkgbase}
 
 if [[ $BUILDDIR = "$startdir" ]]; then
 	srcdir="$BUILDDIR/src"
