@@ -1870,10 +1870,9 @@ create_package() {
 	msg "$(gettext "Creating package \"%s\"...")" "$pkgname"
 
     # remove unwanted languages
-    msg2 "Langs: ${use_langs}"
     if [ -n "${use_langs}" ]; then
         msg2 "Deleting unwanted langs..."
-        find usr/share/locale -maxdepth 1 -mindepth 1 -type d \
+        [ -d usr/share/locale ] && find usr/share/locale -maxdepth 1 -mindepth 1 -type d \
         $(echo ${use_langs} | sed "s@^\|,@ ! -name @g") -exec rm -rf {} \;
     else
         msg2 "Keep all languages..."
