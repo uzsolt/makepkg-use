@@ -2940,7 +2940,8 @@ fi
 pkgbase=${pkgbase:-${pkgname[0]}}
 epoch=${epoch:-0}
 
-[ -f /etc/make-useflags.d/${pkgbase} ] &&  source_safe /etc/make-useflags.d/${pkgbase}
+[ -f /etc/make-useflags.d/${pkgbase} ] && source_safe /etc/make-useflags.d/${pkgbase}
+source_safe "$BUILDFILE"
 
 if [[ $BUILDDIR = "$startdir" ]]; then
 	srcdir="$BUILDDIR/src"
